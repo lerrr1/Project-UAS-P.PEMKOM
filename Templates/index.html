@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Ler's Electronic Shop⚡</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <script>
+      const hargaProduk = {
+        "TV LED 42 inch": 3500000,
+        "Laptop Gaming": 12500000,
+        "Headphone Wireless": 750000,
+        "Speaker Bluetooth": 600000,
+        "Kabel HDMI": 80000,
+        "Powerbank 10000mAh": 150000,
+        "Mouse Gaming RGB": 120000,
+        "Keyboard Mechanical": 450000,
+        Meja: 55000,
+      };
+
+      function updateHarga() {
+        const produkSelect = document.getElementById("produk");
+        const hargaInput = document.getElementById("harga");
+        const selected = produkSelect.value;
+        if (hargaProduk[selected]) {
+          hargaInput.value = hargaProduk[selected];
+        } else {
+          hargaInput.value = "";
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        document
+          .getElementById("produk")
+          .addEventListener("change", updateHarga);
+      });
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>⚡Daftar Penjualan 2025⚡</h1>
+
+      <form action="/tambah" method="post">
+        <input type="date" name="tanggal" required />
+
+        <select name="produk" id="produk" required>
+          <option value="" disabled selected>Pilih Produk</option>
+          <option value="TV LED 42 inch">TV LED 42 inch</option>
+          <option value="Laptop Gaming">Laptop Gaming</option>
+          <option value="Headphone Wireless">Headphone Wireless</option>
+          <option value="Speaker Bluetooth">Speaker Bluetooth</option>
+          <option value="Kabel HDMI">Kabel HDMI</option>
+          <option value="Powerbank 10000mAh">Powerbank 10000mAh</option>
+          <option value="Mouse Gaming RGB">Mouse Gaming RGB</option>
+          <option value="Keyboard Mechanical">Keyboard Mechanical</option>
+          <option value="Meja">Meja</option>
+        </select>
+
+        <input type="number" name="jumlah" placeholder="Jumlah" required />
+
+        <input
+          type="number"
+          step="0.01"
+          name="harga"
+          id="harga"
+          placeholder="Harga"
+          required
+        />
+
+        <button type="submit">INPUT</button>
+      </form>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Tanggal</th>
+            <th>Produk</th>
+            <th>Jumlah</th>
+            <th>Harga</th>
+            <th>Total</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in penjualan %}
+          <tr>
+            <td>{{ item[1] }}</td>
+            <td>{{ item[2] }}</td>
+            <td>{{ item[3] }}</td>
+            <td>{{ item[4] | rupiah }}</td>
+            <td>{{ (item[3] * item[4]) | rupiah }}</td>
+            <td>
+              <a href="/edit/{{ item[0] }}">Edit</a> |
+              <a
+                href="/delete/{{ item[0] }}"
+                onclick="return confirm('Yakin ingin menghapus data ini?')"
+                >Hapus</a
+              >
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>
